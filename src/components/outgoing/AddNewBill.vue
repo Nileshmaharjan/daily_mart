@@ -189,7 +189,6 @@
                     purchasedDate: ''
                 },
                 options: [
-                    '1', '2','3'
                 ],
                 codeOptions: null,
                 perPage: 10,
