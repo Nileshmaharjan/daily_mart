@@ -36,28 +36,17 @@
                 <b-modal id="my-modal"hide-footer no-close-on-backdrop hide-header-close>
                     <ValidationObserver ref="adForm">
                     <form v-on:submit.prevent="addNewBillItem">
-<!--                        <ValidationProvider name="code" rules="required">-->
-<!--                            <div slot-scope="{ errors }">-->
+                       <ValidationProvider name="code" rules="required">
+                           <div slot-scope="{ errors }">
                                 <div class="form-group">
                                     <label>Item Number:</label>
-                                    <multiselect
-                                            :searchable="true"
-                                            v-model="newBillingItem.code"
-                                            :options="codeOptions"
-                        
-                                    >
-                                    </multiselect>
-<!--                                    <b-form-input-->
-<!--                                           -->
-<!--                                            :options="codeOptions"-->
-<!--                                            @change="getItemDetails(newBillingItem.code)"-->
-<!--                                            @search="fetchOptions"-->
-<!--                                            @input="selectedOption"-->
-<!--                                    ></b-form-input>-->
-<!--                                    <p>{{ errors[0] }}</p>-->
+                                     <b-form-select @change="getItemDetails(selected)" v-model="selected" :options="codeOptions"></b-form-select>
+                             
+                               
+                                   <p>{{ errors[0] }}</p>
                                 </div>
-<!--                            </div>-->
-<!--                        </ValidationProvider>-->
+                           </div>
+                       </ValidationProvider>
                         <ValidationProvider name="name" rules="required">
                             <div slot-scope="{ errors }">
                                 <div class="form-group">
@@ -178,6 +167,7 @@
         },
         data() {
             return {
+                selected:null,
                 newBillingItem: {
                     code: null,
                     name: '',
@@ -228,15 +218,17 @@
                 this.resetForm();
                 this.$root.$emit('bv::toggle::modal', 'my-modal', '#btnToggle')
             },
-            async getItemDetails() {
-                console.log('Yes!')
+            async getItemDetails(selected) {
+                this.newBillingItem.code = selected;
                 let self = this;
                 let query = db.collection('items');
+                console.log
                 query = query.where("code", "==", `${this.newBillingItem.code}`);
                 query = query.where('remainingQuantity', '>', '0');
                 query = query.orderBy("remainingQuantity");
                 query = query.limit(1);
                 query.get().then(function(querySnapshot) {
+                        console.log('querySnapshot', querySnapshot);
                         if (querySnapshot.empty == false) {
                             querySnapshot.forEach(function(doc) {
                                 self.newBillingItem.name = doc.data().name;
