@@ -209,11 +209,6 @@
             this.newBillingItem.purchasedDate = new Date().toISOString().slice(0,10);
         },
         methods: {
-
-            getFr(){
-              console.log('gunners')
-            },
-
             toggleModal() {
                 this.resetForm();
                 this.$root.$emit('bv::toggle::modal', 'my-modal', '#btnToggle')
